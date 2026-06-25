@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Profil Tim - Kelompok 10{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-card { border: none; border-radius: 15px; overflow: hidden; transition: transform 0.3s; }
+    .profile-card:hover { transform: translateY(-5px); }
+    .avatar { width: 120px; height: 120px; border-radius: 50%; margin: 25px auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; color: #fff; }
+    .role-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h2 class="fw-bold">Tim Pengembang Kelompok 10</h2>
+    <p class="text-muted">Proyek Akhir Machine Learning - UAS Semester Genap</p>
+</div>
+
+<div class="row g-4 justify-content-center">
+    <div class="col-md-4">
+        <div class="card profile-card text-center shadow-sm h-100">
+            <div class="bg-primary py-2"></div>
+            <div class="avatar bg-primary mx-auto">Z</div>
+            <div class="card-body">
+                <p class="role-label text-primary mb-2">Data Scientist</p>
+                <h5 class="fw-bold">Zakharia</h5>
+                <p class="text-muted small">Pelatihan model C4.5, pembersihan dataset diabetes, dan evaluasi akurasi.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card profile-card text-center shadow-sm h-100">
+            <div class="bg-success py-2"></div>
+            <div class="avatar bg-success mx-auto">J</div>
+            <div class="card-body">
+                <p class="role-label text-success mb-2">Project Manager & Developer</p>
+                <h5 class="fw-bold">Janisha Jaya</h5>
+                <p class="text-muted small">Implementasi Flask, desain antarmuka responsif, dan integrasi API model.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card profile-card text-center shadow-sm h-100">
+            <div class="bg-warning py-2"></div>
+            <div class="avatar bg-warning mx-auto">E</div>
+            <div class="card-body">
+                <p class="role-label text-warning mb-2">Documentation</p>
+                <h5 class="fw-bold">Erivol</h5>
+                <p class="text-muted small">Manajemen laporan LPJK, dokumentasi teknis Bab I-V, dan kendali mutu proyek.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

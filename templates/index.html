@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Beranda - Prediksi Diabetes{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="custom-card">
+            <h2 class="fw-bold mb-1">Analisis Risiko Diabetes</h2>
+            <p class="text-muted mb-4">Cukup isi 5 indikator utama di bawah ini. Model C4.5 akan memprediksi risiko diabetes Anda.</p>
+
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <form action="/predict" method="POST" class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Tekanan Darah Tinggi (Hipertensi)</label>
+                    <select name="HighBP" class="form-select shadow-sm" required>
+                        <option value="0" {% if inputs and inputs.HighBP == 0 %}selected{% endif %}>Tidak</option>
+                        <option value="1" {% if inputs and inputs.HighBP == 1 %}selected{% endif %}>Ya</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Kolesterol Tinggi</label>
+                    <select name="HighChol" class="form-select shadow-sm" required>
+                        <option value="0" {% if inputs and inputs.HighChol == 0 %}selected{% endif %}>Tidak</option>
+                        <option value="1" {% if inputs and inputs.HighChol == 1 %}selected{% endif %}>Ya</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Kesehatan Umum</label>
+                    <select name="GenHlth" class="form-select shadow-sm" required>
+                        <option value="1" {% if inputs and inputs.GenHlth == 1 %}selected{% endif %}>Sangat Baik</option>
+                        <option value="2" {% if inputs and inputs.GenHlth == 2 %}selected{% endif %}>Baik</option>
+                        <option value="3" {% if inputs and inputs.GenHlth == 3 %}selected{% endif %}>Cukup</option>
+                        <option value="4" {% if inputs and inputs.GenHlth == 4 %}selected{% endif %}>Kurang</option>
+                        <option value="5" {% if inputs and inputs.GenHlth == 5 %}selected{% endif %}>Buruk</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Kelompok Usia</label>
+                    <select name="Age" class="form-select shadow-sm" required>
+                        <option value="1"  {% if inputs and inputs.Age == 1  %}selected{% endif %}>18 - 24 tahun</option>
+                        <option value="2"  {% if inputs and inputs.Age == 2  %}selected{% endif %}>25 - 29 tahun</option>
+                        <option value="3"  {% if inputs and inputs.Age == 3  %}selected{% endif %}>30 - 34 tahun</option>
+                        <option value="4"  {% if inputs and inputs.Age == 4  %}selected{% endif %}>35 - 39 tahun</option>
+                        <option value="5"  {% if inputs and inputs.Age == 5  %}selected{% endif %}>40 - 44 tahun</option>
+                        <option value="6"  {% if inputs and inputs.Age == 6  %}selected{% endif %}>45 - 49 tahun</option>
+                        <option value="7"  {% if inputs and inputs.Age == 7  %}selected{% endif %}>50 - 54 tahun</option>
+                        <option value="8"  {% if inputs and inputs.Age == 8  %}selected{% endif %}>55 - 59 tahun</option>
+                        <option value="9"  {% if inputs and inputs.Age == 9  %}selected{% endif %}>60 - 64 tahun</option>
+                        <option value="10" {% if inputs and inputs.Age == 10 %}selected{% endif %}>65 - 69 tahun</option>
+                        <option value="11" {% if inputs and inputs.Age == 11 %}selected{% endif %}>70 - 74 tahun</option>
+                        <option value="12" {% if inputs and inputs.Age == 12 %}selected{% endif %}>75 - 79 tahun</option>
+                        <option value="13" {% if inputs and inputs.Age == 13 %}selected{% endif %}>80 tahun ke atas</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Tinggi Badan (cm)</label>
+                    <input type="number" step="0.1" name="height" id="height" class="form-control shadow-sm" placeholder="Misal: 170" required value="{{ inputs.height if inputs else '' }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Berat Badan (kg)</label>
+                    <input type="number" step="0.1" name="weight" id="weight" class="form-control shadow-sm" placeholder="Misal: 65" required value="{{ inputs.weight if inputs else '' }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Hasil BMI (otomatis)</label>
+                    <input type="text" id="bmi_display" class="form-control shadow-sm bg-light" readonly placeholder="Otomatis" value="{{ inputs.BMI if inputs else '' }}">
+                </div>
+
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary-custom w-100">Proses Analisis C4.5</button>
+                </div>
+            </form>
+
+            {% if result %}
+            <div class="mt-5 p-4 rounded-4 text-center border shadow-sm" style="background: #f0f7ff;">
+                <h5 class="text-secondary mb-2">Hasil Prediksi Sistem:</h5>
+                <h1 class="display-5 fw-bold {% if is_positive %}text-danger{% else %}text-success{% endif %}">
+                    {{ result }}
+                </h1>
+                <p class="mb-0 mt-2">Tingkat keyakinan model: <strong>{{ proba }}%</strong></p>
+                <p class="mb-0 mt-3 text-muted small">Hasil ini bersifat indikatif berdasarkan data survei kesehatan, bukan diagnosis medis. Konsultasikan dengan dokter untuk pemeriksaan lebih lanjut.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const heightInput = document.getElementById('height');
+    const weightInput = document.getElementById('weight');
+    const bmiDisplay  = document.getElementById('bmi_display');
+
+    function calculateBMI() {
+        const h = parseFloat(heightInput.value);
+        const w = parseFloat(weightInput.value);
+        if (h > 0 && w > 0) {
+            bmiDisplay.value = (w / ((h / 100) ** 2)).toFixed(1);
+        } else {
+            bmiDisplay.value = "";
+        }
+    }
+    heightInput.addEventListener('input', calculateBMI);
+    weightInput.addEventListener('input', calculateBMI);
+</script>
+{% endblock %}
