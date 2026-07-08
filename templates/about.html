@@ -5,7 +5,7 @@
 {% block extra_css %}
 <style>
     .about-section { line-height: 1.8; }
-    .tech-stack-icon { font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 1rem; }
+    .tech-stack-icon { font-size: 2.5rem; color: #000 !important; margin-bottom: 1rem; }
     .feature-list i { color: #27ae60; margin-right: 10px; }
 </style>
 {% endblock %}
@@ -21,19 +21,24 @@
 
             <div class="row g-5">
                 <div class="col-md-7">
-                    <h4 class="fw-bold mb-3"><i class="fa-solid fa-circle-info me-2 text-primary"></i>Latar Belakang</h4>
+                    <h4 class="fw-bold mb-3"><i class="fa-solid fa-circle-info me-2"></i>Latar Belakang</h4>
                     <p>
-                        Aplikasi <strong>DiabetesCheck</strong> dikembangkan untuk membantu deteksi dini risiko diabetes. Dengan teknik <i>Data Mining</i>, aplikasi ini menganalisis pola indikator kesehatan dari ribuan data survei medis untuk memberikan prediksi yang cepat.
+                        Aplikasi <strong>DiabetesCheck</strong> dikembangkan untuk membantu deteksi dini risiko diabetes. Dengan teknik <i>Data Mining</i>, aplikasi ini menganalisis pola indikator kesehatan untuk memberikan prediksi risiko diabetes secara cepat berdasarkan 5 pertanyaan sederhana.
                     </p>
 
-                    <h4 class="fw-bold mt-4 mb-3"><i class="fa-solid fa-microchip me-2 text-primary"></i>Algoritma C4.5</h4>
+                    <h4 class="fw-bold mt-4 mb-3"><i class="fa-solid fa-microchip me-2"></i>Algoritma C4.5</h4>
                     <p>
-                        Sistem menggunakan algoritma <strong>C4.5 (Decision Tree)</strong> berbasis <i>entropy / information gain</i>. Pohon keputusan yang dihasilkan transparan, sehingga dasar pengambilan keputusan sistem mudah ditelusuri.
+                        Sistem menggunakan algoritma <strong>C4.5 (Decision Tree)</strong> berbasis <i>entropy / information gain</i>, diimplementasikan dengan <code>DecisionTreeClassifier(criterion='entropy')</code> dari Scikit-Learn. Kedalaman pohon (<code>max_depth</code>) ditentukan melalui 5-Fold Cross Validation agar model tidak overfitting. Pohon keputusan yang dihasilkan transparan, sehingga dasar pengambilan keputusan sistem mudah ditelusuri.
                     </p>
 
-                    <h4 class="fw-bold mt-4 mb-3"><i class="fa-solid fa-database me-2 text-primary"></i>Dataset</h4>
+                    <h4 class="fw-bold mt-4 mb-3"><i class="fa-solid fa-database me-2"></i>Dataset &amp; Preprocessing</h4>
                     <p>
-                        Model dilatih pada dataset <strong>BRFSS 2015</strong> (<code>diabetes_012_health_indicators</code>) berisi 253.680 responden. Data diolah menjadi klasifikasi biner (Tidak Diabetes vs Diabetes), lalu kelas diseimbangkan dengan <i>undersampling</i> agar model adil terhadap kedua kelas.
+                        Model dilatih pada dataset <strong>BRFSS 2015</strong> (<code>diabetes_012_health_indicators_BRFSS2015.csv</code>) berisi 253.680 responden. Setelah data duplikat dihapus, label 3 kelas (Tidak Diabetes / Prediabetes / Diabetes) digabung menjadi klasifikasi biner (Tidak Diabetes vs Diabetes). Karena data tidak seimbang (rasio ±4,8 : 1), kelas mayoritas pada data <em>training</em> diseimbangkan dengan <i>undersampling</i> — data <em>testing</em> tetap dibiarkan asli agar evaluasi mencerminkan kondisi nyata.
+                    </p>
+
+                    <h4 class="fw-bold mt-4 mb-3"><i class="fa-solid fa-square-poll-vertical me-2"></i>Performa Model</h4>
+                    <p>
+                        Diuji pada data testing yang tidak diseimbangkan, model memperoleh <strong>Accuracy 68,12%</strong>, <strong>Balanced Accuracy 72,13%</strong>, dan <strong>ROC-AUC 0,798</strong>. Balanced Accuracy dan ROC-AUC digunakan sebagai patokan utama karena lebih adil untuk data yang tidak seimbang dibanding accuracy biasa.
                     </p>
                 </div>
 
@@ -41,13 +46,13 @@
                     <div class="p-4 rounded-4" style="background-color: #f0f7ff;">
                         <h5 class="fw-bold mb-3">Parameter Analisis (5 Fitur Utama)</h5>
                         <ul class="list-unstyled feature-list">
-                            <li><i class="fa-solid fa-check-circle"></i> Tekanan Darah Tinggi (Hipertensi)</li>
-                            <li><i class="fa-solid fa-check-circle"></i> Kolesterol Tinggi</li>
-                            <li><i class="fa-solid fa-check-circle"></i> BMI (Tinggi &amp; Berat Badan)</li>
-                            <li><i class="fa-solid fa-check-circle"></i> Kondisi Kesehatan Umum</li>
-                            <li><i class="fa-solid fa-check-circle"></i> Kelompok Usia</li>
+                            <li><i class="fa-solid fa-check-circle"></i> Tekanan Darah Tinggi (HighBP)</li>
+                            <li><i class="fa-solid fa-check-circle"></i> Kolesterol Tinggi (HighChol)</li>
+                            <li><i class="fa-solid fa-check-circle"></i> BMI — dihitung otomatis dari Tinggi &amp; Berat Badan</li>
+                            <li><i class="fa-solid fa-check-circle"></i> Kondisi Kesehatan Umum (GenHlth)</li>
+                            <li><i class="fa-solid fa-check-circle"></i> Kelompok Usia (Age)</li>
                         </ul>
-                        <p class="small text-muted mt-3 mb-0">Dipilih dari 21 fitur berdasarkan <i>feature importance</i> — 5 fitur ini memberi akurasi yang setara dengan model lengkap.</p>
+                        <p class="small text-muted mt-3 mb-0">Dipilih dari 21 fitur pada dataset asli berdasarkan <i>feature importance</i> hasil model C4.5 — 5 fitur ini dipakai langsung pada form prediksi di aplikasi.</p>
                     </div>
                 </div>
             </div>
@@ -56,8 +61,8 @@
 
             <div class="text-center">
                 <h4 class="fw-bold mb-4">Teknologi yang Digunakan</h4>
-                <div class="row">
-                    <div class="col-4 col-md-2 offset-md-3">
+                <div class="row justify-content-center">
+                    <div class="col-4 col-md-2">
                         <i class="fa-brands fa-python tech-stack-icon"></i>
                         <p class="small fw-bold">Python</p>
                     </div>
@@ -68,6 +73,10 @@
                     <div class="col-4 col-md-2">
                         <i class="fa-solid fa-chart-line tech-stack-icon"></i>
                         <p class="small fw-bold">Scikit-Learn</p>
+                    </div>
+                    <div class="col-4 col-md-2">
+                        <i class="fa-solid fa-table tech-stack-icon"></i>
+                        <p class="small fw-bold">Pandas</p>
                     </div>
                 </div>
             </div>
