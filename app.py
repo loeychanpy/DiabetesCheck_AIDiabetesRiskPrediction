@@ -26,6 +26,8 @@ def predict():
         # BMI dihitung otomatis dari tinggi & berat badan
         height = float(request.form['height'])   # cm
         weight = float(request.form['weight'])    # kg
+        if height <= 0 or weight <= 0:
+            raise ValueError("tinggi dan berat badan harus lebih dari 0")
         bmi = round(weight / ((height / 100) ** 2), 1)
 
         input_data = {
